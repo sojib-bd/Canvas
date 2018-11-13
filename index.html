@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Playing with the HTML Canvas</title>
+	<link href="https://fonts.googleapis.com/css?family=Anton|Pacifico|Satisfy" rel="stylesheet">
+	<style type="text/css">
+
+		*{
+			margin:0;
+			padding: 0;
+			outline: 0;
+		}
+		h1{
+			margin-top: 20px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-color: orange;
+			font-size: 50px;
+			font-family: 'Anton', sans-serif;
+	        font-family: 'Pacifico', cursive;
+	        font-family: 'Satisfy', cursive;
+		}
+	</style>
+</head>
+<body>
+	<h1>Drawing In the Canvas</h1>
+
+	<canvas id="myFrame" height="800" width="800"></canvas>
+
+
+
+	<script type="text/javascript">
+		
+		let canvas=document.querySelector("#myFrame")
+
+		let ctx=canvas.getContext('2d');
+
+		canvas.width=window.innerWidth;
+		canvas.height=window.innerHeight;
+		ctx.strokeStyle="pink";
+		ctx.lineCap='round';
+		ctx.lineJoin="round";
+		ctx.lineWidth=100;
+
+		let lastX=0;
+		let lastY=0;
+		let hue=0;
+		let direction=true;
+
+		let isDrawing=false;
+
+		function draw(e){
+			if(!isDrawing){
+				return
+			}
+			console.log(e)
+			ctx.strokeStyle=`hsl(${hue},100%,50%)`;
+			ctx.beginPath();
+			ctx.moveTo(lastX,lastY);
+			ctx.lineTo(e.offsetX,e.offsetY);
+			ctx.stroke();
+			[lastX,lastY]=[e.offsetX,e.offsetY];
+			hue++;
+			if(hue>=360){
+				hue=0;
+			}
+
+			if(ctx.lineWidth>=100 || ctx.lineWidth<=1){
+				direction=!direction
+			}
+			if(direction){
+				ctx.lineWidth++
+			}else{
+				ctx.lineWidth--
+			}
+		}
+
+		canvas.addEventListener('mousemove',draw)
+		canvas.addEventListener('mousedown',(e)=>{
+			isDrawing=true;
+			[lastX,lastY]=[e.offsetX,e.offsetY]
+		})
+		canvas.addEventListener('mouseup',()=>isDrawing=false)
+		canvas.addEventListener('mouseout',()=>isDrawing=false)
+
+	</script>
+
+
+
+</body>
+</html>
